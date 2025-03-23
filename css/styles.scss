@@ -1,0 +1,30 @@
+body {
+    background-color: rgb(255, 237, 222);
+    margin: 0;
+  }
+  .container {
+    border: 1px solid red;
+    display: grid;
+    padding-top: 0px;
+    margin-inline: auto;
+    margin-top: 60px;
+    max-width: 80%;
+  }
+  header {
+    padding: 0;
+  }
+  h1, h2 {
+    margin: 0;
+  }
+  h1 {
+    font-size: 40px;
+  }
+  .content {
+    display: grid;
+    grid-template-rows: 4% 1fr;
+    grid-template-columns: 70% 1fr;
+    gap: 1rem;
+  }
+
+@import "./components/cart-sidebar.scss";
+@import "./components/product-list.scss";

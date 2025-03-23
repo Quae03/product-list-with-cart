@@ -1,0 +1,1 @@
+Webpage with functionality to add products on display to cart for checking out. Coded using HTML, CSS and Javascript

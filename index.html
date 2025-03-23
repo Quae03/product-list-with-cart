@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Product list with cart</title>
+
+  <link rel="stylesheet" href="./css/styles.css">
+
+</head>
+<body>
+  <div class="container">
+
+    <div class="content">
+      <header><h1>Desserts</h1></header>
+      <div class="cart-sidebar" id="cart">
+        <h2>Your Cart (<p class="cart-amount" id="cart-amount">0</p>)</h2>
+        <div id="cart-sidebar-content">
+          <img src="assets/images/illustration-empty-cart.svg" alt="">
+          <p>Your added items will appear here</p>
+        </div>
+        <div class="item">
+          <div class="name">
+            NAME
+          </div>
+          <div class="details">
+            <div class="quantity">
+              <span class="minus"></span>
+              <span>1</span>
+              <span class="plus"></span>
+            </div>
+            <div class="price">
+              $50
+            </div>
+            <div class="totalPrice">
+              $200
+            </div>
+          </div>
+        </div>
+        <div class="order-total-div">
+          <p>Order Total</p>
+          <p class="order-total" id="orderTotal">$0</p>
+        </div>
+        <div class="confirm-order">
+          <div class="carbon-neutral-div">This is a carbon-neutral delivery</div>
+          <button class="order-confirm-btn" id="orderConfirmBtn">Confirm Order</button>
+        </div>
+      </div>
+
+      <div class="product-list" id="product-list">
+        
+      </div>
+    </div>
+  
+</body>
+<script src="script.js"></script>
+</html>
