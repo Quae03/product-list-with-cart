@@ -8,52 +8,37 @@
   
   <title>Frontend Mentor | Product list with cart</title>
 
-  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="/src/styles.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
 </head>
 <body>
   <div class="container">
 
+    <header><h1>Desserts</h1></header>
     <div class="content">
-      <header><h1>Desserts</h1></header>
-      <div class="cart-sidebar" id="cart">
-        <h2>Your Cart (<p class="cart-amount" id="cart-amount">0</p>)</h2>
-        <div id="cart-sidebar-content">
-          <img src="assets/images/illustration-empty-cart.svg" alt="">
-          <p>Your added items will appear here</p>
-        </div>
-        <div class="item">
-          <div class="name">
-            NAME
-          </div>
-          <div class="details">
-            <div class="quantity">
-              <span class="minus"></span>
-              <span>1</span>
-              <span class="plus"></span>
-            </div>
-            <div class="price">
-              $50
-            </div>
-            <div class="totalPrice">
-              $200
-            </div>
-          </div>
-        </div>
-        <div class="order-total-div">
-          <p>Order Total</p>
-          <p class="order-total" id="orderTotal">$0</p>
-        </div>
-        <div class="confirm-order">
-          <div class="carbon-neutral-div">This is a carbon-neutral delivery</div>
-          <button class="order-confirm-btn" id="orderConfirmBtn">Confirm Order</button>
-        </div>
-      </div>
-
-      <div class="product-list" id="product-list">
-        
+      <div class="product-list" id="product-list"></div>
+      <div class="cart">
+        <h2>Your Cart (<p id="cartAmount" class="cart-amount">0</p>)</h2>
+        <div id="cartCheckout"></div>
+        <div id="checkoutTotal"></div>
       </div>
     </div>
+  </div>
+  
+  <div id="overlay" class="overlay"></div>
+  
+  <div id="orderConfirmation" class="order-confirmation">
+    <img src="assets/images/icon-order-confirmed.svg" alt="order confirmation icon">
+    <h1><strong>Order Confirmed</strong></h1>
+    <p>We hope you enjoy your food!</p>
+    <div id="cartConfirm" class=""></div>
+    <div id="checkoutTotalConfirm"></div>
+    <button id="closeConfirmation">Start New Order</button>
+  </div>
   
 </body>
 <script src="script.js"></script>

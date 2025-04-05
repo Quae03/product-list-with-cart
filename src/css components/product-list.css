@@ -1,0 +1,44 @@
+.product-list {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto;
+  gap: 1rem;
+}
+.product-list div {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  overflow: hidden;
+}
+.product-list div img {
+  border-radius: 8px;
+}
+.product-list div button {
+  background-color: white;
+  border: 1px solid rgb(190, 109, 3) rgb(190, 109, 3);
+  border-radius: 10px;
+  display: inline;
+  position: relative;
+  top: -15px;
+  padding: 10px 5px;
+  margin: 0 auto;
+  width: 80%;
+}
+.product-list div button:hover {
+  color: aqua;
+}
+.product-list div p {
+  margin: 0px;
+}
+.product-list div p.dessert-name {
+  font-size: 20px;
+}
+.product-list div p.dessert-cat {
+  color: grey;
+  margin-top: 10px;
+}
+.product-list div p.dessert-price {
+  color: rgb(190, 109, 3);
+  font-size: 20px;
+  font-weight: bold;
+}/*# sourceMappingURL=product-list.css.map */

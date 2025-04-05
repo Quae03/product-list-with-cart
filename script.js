@@ -109,57 +109,257 @@ let nestedJsonData = `[
         "category": "Panna Cotta",
         "price": 6.50
      }
-]`
+]`;
 
 // Insert product data into list of products in HTML
 
 let productItemsData = JSON.parse(nestedJsonData);
+let cart = JSON.parse(localStorage.getItem("data")) || [];
+let cartCheckout = document.getElementById('cartCheckout');
+let checkoutTotal = document.getElementById('checkoutTotal');
 
 function generateProductData() {
     return (document.getElementById('product-list').innerHTML = productItemsData.map((x) => {
         let {id, image, category, name, price} = x;
-        return `<div id="product${id}">
-          <img src="${image.desktop}" alt="Waffle with Berries">
-          <button id="productButton${id}" class="add-to-cart" onclick="addToCart(this, ${id})">Add to Cart</button>
-          <p class="dessert-cat">${category}</p>
-          <p class="dessert-name">${name}</p>
-          <p class="dessert-price">$${price.toFixed(2)}</p>
-        </div>`
+        let search = cart.find((x)=> x.id === id) || [];
+        let productContent = `
+        <div id=product${id} class="product-details">
+            <img id="productImage${id}" src="${image.desktop}" alt="Waffle with Berries">
+            <button id="productButton${id}" class="add-to-cart-btn">
+              <div class="buttons">
+                <img onclick="decrement(${id})" src="assets/images/icon-decrement-quantity.svg" class="minus"></img>
+                <div id="quantity${id}" class="quantity">
+                ${search.quantity === undefined? 0: search.quantity}
+                </div>
+                <img onclick="increment(${id}), applyStyle(${id})" src="assets/images/icon-increment-quantity.svg" class="plus"></img>
+              </div>
+            </button>
+            <p class="dessert-cat">${category}</p>
+            <p class="dessert-name">${name}</p>
+            <p class="dessert-price">$${price.toFixed(2)}</p>
+        </div>`;
+        applyStyle(id); // Add a border around the image of selected items
+        return productContent;
     }).join(""))
 }
 
-generateProductData()
+generateProductData();
 
-// Cart sidebar functionality
+// Reference localStorage to style selected items
 
-let cart = [] // Create an array to store objects for the cart
+let styledImgs = JSON.parse(localStorage.getItem("styledButtons")) || [];
+styledImgs.map((x) => {
+    let img = document.getElementById(`productImage${x}`);
+    img.style.border = '2px solid hsl(14, 86%, 42%)';
+}); 
 
+let increment = (id)=>{
+    let selectedItem = id;
+    let search = cart.find((x) => x.id === selectedItem);
 
-function addToCart(button, id) {
-
-    // Reference the id provided with the onclick to access its respective object's properties
-    let product = productItemsData.find(product => product.id === id)
-
-    let productInCart = cart.find(productInCart => productInCart.id === id) 
-    
-    // Check if the product has already been added to
-    // --the cart array as an object
-    if (productInCart) {
-        productInCart.quantity += 1
-        productInCart.totalPrice = productInCart.quantity * productInCart.price
-    } else { // Add product for the first time
+    if (search === undefined) {
         cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: 1,
-            totalPrice: product.price
+            id: selectedItem,
+            quantity: 1
         });
+        applyStyle(id);
+    } else {
+        search.quantity += 1;
     }
+    
+    generateCartItems();
+    checkout();
+    update(selectedItem);
+    localStorage.setItem("data", JSON.stringify(cart));
+};
+let decrement = (id)=>{
+    let selectedItem = id;
+    let search = cart.find((x) => x.id === selectedItem);
 
-    // Create increment and decrement buttons within button
-    let buttonContent = document.getElementById(button.id)
-    buttonContent.innerHTML = ''
+    if (search === undefined) return;
+    if (search.quantity === 0) { 
+        return;
+    } else {
+        search.quantity -= 1;
+        if (search.quantity === 0) {removeStyle(id)};
+    }
+    
+    update(selectedItem);
+    cart = cart.filter((x)=>x.quantity !== 0);
+    generateCartItems();
+    checkout();
+    localStorage.setItem("data", JSON.stringify(cart));
+};
+let update = (id)=>{
+    let search = cart.find((x) => x.id === id);
+    document.getElementById(`quantity${id}`).innerHTML = search.quantity;
+    calculation();
+};
 
-    document.createElement('span')
+let calculation =()=>{
+    let cartAmount = document.getElementById('cartAmount');
+    cartAmount.innerHTML = cart.map((x)=> x.quantity).reduce((x, y)=> x+y, 0);
+}
+
+calculation();
+
+let generateCartItems = () => {
+    if (cart.length !== 0) {
+        return (cartCheckout.innerHTML = cart
+            .map((x)=> {
+                let {id, quantity} = x;
+                let search = productItemsData.find((y)=>y.id === id) || []; 
+                let totalPrice = x.quantity * search.price;
+                return `
+                <div class="item">
+                  <div class="name">
+                    <strong>${search.name}</strong>
+                  </div>
+                  <div class="details">
+                    <div class="quantity">
+                      <span>${quantity}X</span>
+                    </div>
+                    <div class="price">
+                      @ ${search.price.toFixed(2)}
+                    </div>
+                    <div class="total-price">
+                    $${totalPrice.toFixed(2)}
+                    </div>
+                    <img class="remove-item" onclick="removeItem(${id})" src="assets/images/icon-remove-item.svg"/>
+                  </div>
+                </div>
+                `;
+            })
+            .join(""));
+    } else {
+        cartCheckout.innerHTML = `
+        <div class="cart-content">
+          <img src="assets/images/illustration-empty-cart.svg" alt="">
+          <p>Your added items will appear here</p>
+        </div>`;
+    }
+}
+
+generateCartItems();
+
+let removeItem = (id)=> { // Remove clicked item from checkout
+    let selectedItem = cart.find((x)=> x.id === id);
+    selectedItem.quantity = 0;
+    document.getElementById(`quantity${id}`).innerHTML = selectedItem.quantity;
+    removeStyle(id);
+    calculation();
+    cart = cart.filter((x)=> x.id !== id);
+    
+    generateCartItems();
+    checkout();
+    localStorage.setItem("data", JSON.stringify(cart));
+}
+
+function checkout() {
+    generateCartItems();
+    if (cart.length !== 0) { 
+        let totalPrices = cart.map((x) => {
+            let {id, quantity} = x;
+            let search = productItemsData.find((y)=>y.id === id) || [];
+            return search.price * quantity;
+        })
+        let total = totalPrices.reduce((acc, totalPrice) => acc + totalPrice, 0);
+        
+        return checkoutTotal.innerHTML = `
+        <div class="order-total-div">
+          <p>Order Total</p>
+          <p class="order-total" id="orderTotal"><strong>$${total.toFixed(2)}</strong></p>
+        </div>
+        <div class="confirm-order">
+            <div class="carbon-neutral-div">
+            <img src="assets/images/icon-carbon-neutral.svg"></img>
+            This is a <strong>carbon-neutral</strong> delivery
+            </div>
+            <button onclick="showConfirmation()" class="order-confirm-btn" id="orderConfirmBtn">Confirm Order</button>
+        </div>`
+    } else {
+        return checkoutTotal.innerHTML = "";
+    }
+}
+
+checkout();
+
+function applyStyle(id) {
+    let img = document.getElementById(`productImage${id}`);
+    if (!img) return;
+    
+    img.style.border = '2px solid hsl(14, 86%, 42%)';
+    
+    let styledImgs = JSON.parse(localStorage.getItem("styledButtons")) || [];
+    
+    if (!styledImgs.includes(id)) {
+        styledImgs.push(id);
+        localStorage.setItem("styledButtons", JSON.stringify(styledImgs));
+    }
+}
+
+function removeStyle(id) {
+    let img = document.getElementById(`productImage${id}`);
+    if (!img) return;
+
+    img.style.border = 'none';
+    
+    let styledImgs = JSON.parse(localStorage.getItem("styledButtons")) || [];
+    
+    if (styledImgs.includes(id)) {
+        styledImgs = styledImgs.filter((x)=> x !== id);
+        localStorage.setItem("styledButtons", JSON.stringify(styledImgs));
+    }
+}
+
+function showConfirmation() {
+    let overlay = document.getElementById('overlay');
+    let orderConfirmation = document.getElementById('orderConfirmation');
+    let closeConfirmation = document.getElementById('closeConfirmation');
+    let cartConfirm = document.getElementById('cartConfirm');
+    let checkoutTotalConfirm = document.getElementById('checkoutTotalConfirm');
+
+    closeConfirmation.addEventListener('click', ()=> {
+        localStorage.clear();
+        location.reload();
+    });
+
+    overlay.style.display = 'block';
+    orderConfirmation.style.display = 'block';
+    let confirmationContent = (cartConfirm.innerHTML = cart
+        .map((x)=> {
+            let {id, quantity} = x;
+            let search = productItemsData.find((y)=>y.id === id) || []; 
+            let totalPrice = x.quantity * search.price;
+
+            return `
+            <div class="item">
+              <div class="name">
+                <strong>${search.name}</strong>
+              </div>
+              <div class="details">
+                <div class="quantity">
+                  <span>X${quantity}</span>
+                </div>
+                <div class="totalPrice">
+                $${totalPrice.toFixed(2)}
+                </div>
+              </div>
+            </div>
+            `;
+        }).join(""));
+        let totalPrices = cart.map((x) => {
+            let {id, quantity} = x;
+            let search = productItemsData.find((y)=>y.id === id) || [];
+            return search.price * quantity;
+        })
+        let total = totalPrices.reduce((acc, totalPrice) => acc + totalPrice, 0);
+        
+        checkoutTotalConfirm.innerHTML = `
+        <div class="order-total-div">
+          <p>Order Total</p>
+          <p class="order-total" id="orderTotal"><strong>$${total.toFixed(2)}</strong></p>
+        </div>`;
+
+        return confirmationContent;
 }
