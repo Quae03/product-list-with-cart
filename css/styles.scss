@@ -1,0 +1,44 @@
+@use "./components/cart-sidebar.scss";
+@use "./components/product-list.scss";
+@use "./components/order-confirmation.scss";
+@use "./components/variables";
+
+body {
+    background-color: hsl(20, 50%, 98%);
+    font-family: "Red Hat Display", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    margin: 0;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0px;
+    margin-inline: auto;
+    margin-top: 60px;
+    margin-bottom: 100px;
+    max-width: 80%;
+  }
+  header {
+    padding: 0;
+    margin-bottom: 10px;
+    @media (max-width: 500px) {
+      >h1 {
+        text-align: center;
+      }
+    }
+  }
+  h1, h2 {
+    font-weight: bold;
+    margin: 0;
+  }
+  h1 {
+    font-size: 40px;
+  }
+  .content {
+    display: flex;
+    gap: 1rem;
+    @media (max-width: 850px) {
+      flex-direction: column;
+    }
+  }

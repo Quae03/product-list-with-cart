@@ -1,0 +1,90 @@
+@use "./variables";
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    @media (max-width: 500px) {
+        grid-template-columns: repeat(1, 1fr);
+        text-align: center;
+        >div {
+            margin: 0 auto;
+        }
+      }
+    div.product-details {
+        display: flex;
+        flex-direction: column;
+        max-width: 300px;
+        overflow: hidden;
+        img {
+            border-radius: 8px;
+        }
+        .pre-add-to-cart-btn {
+            background-color: #fff;
+            border: 1px solid gray;
+            border-radius: 20px;
+            color: #000;
+            display: flex;
+            font-size: 15px;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+            top: -20px;
+            padding: 10px 5px;
+            margin: 0 auto;
+            margin-bottom: -20px;
+            width: 60%;
+            &:hover {
+                border: 1px solid variables.$red;
+            }
+        }
+        .add-to-cart-btn {
+            background-color: variables.$red;
+            border: 1px solid variables.$red;
+            border-radius: 10px;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            position: relative;
+            top: -20px;
+            padding: 10px 5px;
+            margin: 0 auto;
+            margin-bottom: -20px;
+            width: 60%;
+            .buttons {
+                display: flex;
+                overflow: hidden;
+                justify-content: space-between;
+                width: 80%;
+                img {
+                    border: 1px solid #fff;
+                    border-radius: 15px;
+                    cursor: pointer;
+                    padding: 5px;
+                }
+                .quantity {
+                    position: relative;
+                    top: 4px;
+                }
+            }
+        }
+        p {
+            margin: 0px;
+            margin-top: 0;
+        }
+        p.dessert-name {
+            font-size: 20px;
+        }
+        p.dessert-cat {
+            color: grey;
+            margin-top: 10px;
+        }
+        p.dessert-price {
+            color: variables.$red;
+            font-size: 20px;
+            font-weight: bold;
+        }    
+    }
+}
